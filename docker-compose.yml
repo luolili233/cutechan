@@ -1,10 +1,27 @@
-version: "3"
-
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: meguca
+      POSTGRES_USER: meguca
+      POSTGRES_PASSWORD: meguca
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meguca -d meguca"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   cutechan:
     image: cutechan
     ports:
       - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - db
     volumes:
@@ -14,6 +31,9 @@ services:
     environment:
       - TZ=Europe/Moscow
 
+volumes:
+  postgres_data:
+
 networks:
   db:
-    external: true
+    driver: bridge

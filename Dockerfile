@@ -1,4 +1,4 @@
-FROM amd64/ubuntu:23.10
+FROM amd64/ubuntu:24.04
 
 RUN apt update && apt install -y --no-install-recommends libavformat60 libswscale7 libgraphicsmagick-q16-3 sudo ca-certificates tzdata adduser && apt clean \
  && adduser --system --group --no-create-home --disabled-login --uid 2000 user \
